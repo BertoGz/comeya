@@ -12,14 +12,15 @@ export default function CardItem(props){
 
 	{/*animation states 1 = added to list animation
 	2 = heart animation*/}
-	const isInList = useSelector(state => state.user).lists['list1'].includes(dish.title)
-	const [triggerAnimation1,setTriggerAnimation1] = useState(false)
+	const currentList = useSelector(state=>state.currentList)
+	const isInList = useSelector(state => state.user).lists[currentList].includes(dish.title)
+	const [triggerAnimation1,setTriggerAnimation1] = useState(isInList)
 
 
 	useEffect(()=>{
 		fetchDish()
 		setTriggerAnimation1(isInList)
-	},[dish.title])
+	},[dish.title,isInList])
 
 	const fetchDish = async() => {
 
@@ -39,7 +40,7 @@ export default function CardItem(props){
 					</View>
 
 					<Break/> 
-					<CardImage image={dish.url} inList={isInList} triggerAnimation1={triggerAnimation1} />
+					<CardImage image={dish.url} triggerAnimation1={triggerAnimation1} />
 					<CardButtons inList={isInList} dishTitle={dish.title} setTriggerAnimation1={setTriggerAnimation1}/>
 					<Description/>
 				</View>
@@ -56,8 +57,8 @@ export default function CardItem(props){
 const CardImage=({image,triggerAnimation1})=>{
 
 
-	const [animationPos,setAnimationPos] = useState(new Animated.Value(0))
-	const [animationIconTransform, setAnimationIconTransform] = useState(new Animated.Value(0))
+	const [animationPos,setAnimationPos] = useState(new Animated.Value(triggerAnimation1? 1 : 0))
+	const [animationIconTransform, setAnimationIconTransform] = useState(new Animated.Value(triggerAnimation1 ? 2: 0))
 
     if (triggerAnimation1===true){
   

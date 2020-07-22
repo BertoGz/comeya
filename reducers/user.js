@@ -1,9 +1,9 @@
 
-import {RECEIVE_USER,TOGGLE_LIST_ITEM} from '../actions/user'
+import {SET_CURRENT_USER,TOGGLE_LIST_ITEM} from '../actions/user'
 
 export default function user(state={},action){
 	switch(action.type){
-		case RECEIVE_USER:
+		case SET_CURRENT_USER:
 		return{
 			...state,
 			...action.user

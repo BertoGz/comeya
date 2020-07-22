@@ -1,21 +1,21 @@
-export const RECEIVE_USER = 'RECEIVE_USER'
+export const SET_CURRENT_USER = 'SET_CURRENT_USER'
 export const TOGGLE_LIST_ITEM = 'TOGGLE_ADD_TO_LIST'
 export const TOGGLE_FAVORITE_ITEM = 'TOGGLE_ADD_TO_FAVORITE'
 
 import {getUserFromServer,toggleListItemFromServer} from '../utils/api'
 
-export function receiveUserAction(user){
+export function setCurrentUserAction(user){
 	return{
-		type:RECEIVE_USER,
+		type:SET_CURRENT_USER,
 		user,
 	}
 
 }
 
-export function handleReceiveUserAction(userID){
+export function handleSetCurrentUserAction(userID){
 	return(dispatch)=>{
 		return getUserFromServer(userID).then(({user})=>{
-			dispatch(receiveUserAction(user))
+			dispatch(setCurrentUserAction(user))
 		})
 	}
 }
