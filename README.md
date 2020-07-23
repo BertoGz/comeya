@@ -20,8 +20,8 @@ This app demonstrates use my latest skillset with react.
 <h1>Summary </h1>
   <ul>
     <li>
-      Uses React hooks, which allowed me to clean up alot of code
-      and make programmes less tangeled.
+      Uses React hooks, which cleaned up alot of code
+      and made the app less tangeled.
     </li>
     <li>
       Demonstrates use of the React Animated Library
