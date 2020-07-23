@@ -1,13 +1,15 @@
 import React,{useState,useEffect} from 'react'
+import {useDispatch} from 'react-redux'
 import {View,Text,TouchableOpacity,Image,StyleSheet} from 'react-native'
 import {white, cream, darkCream,goodBlue,black,gray} from '../utils/colors'
 import {SimpleLineIcons} from '@expo/vector-icons'; 
+import {handleOpenSettingsGroceryItemAction} from '../actions/menuOptions'
 
 
 export default function GroceryListItem(props){
 	const [dish,setDish] = useState({title:""})
 	const [opened,setOpened] = useState(false)
-
+	const dispatch = useDispatch()
 	const handlePress=()=>{
 		setOpened(opened?false : true)
 	}
@@ -25,19 +27,22 @@ export default function GroceryListItem(props){
 		setDish(dishes[props.dishID] )
 	}
 
+	function handleViewOptionsMenu(){
+		dispatch(handleOpenSettingsGroceryItemAction(dish.title))
+	}
 	return(
-		<View style={{}}>
+		<View style={{widht:'100%'}}>
 			<View style={opened ? styles.headerOpen : styles.headerClosed }> 
 				<View style={{paddingLeft:10,flexDirection:'row'}}>
 					<CardImage image={dish.url}/>
-					<TouchableOpacity onPress={handlePress} style={{width:'70%'}}>
+					<TouchableOpacity onPress={handlePress} style={{width:'68%',paddingRight:20}}>
 						<View>
 							<CardTitle title={dish.title}/>
 						</View>
 					</TouchableOpacity>
 				</View>
 
-				<TouchableOpacity style={{justifyContent:'center'}} onPress={()=>{props.setOptionsToggled(true)}}>
+				<TouchableOpacity style={{justifyContent:'center',padding:20}} onPress={handleViewOptionsMenu}>
 					<SimpleLineIcons name="options-vertical" size={24} color="black" />
 				</TouchableOpacity>
 			</View>

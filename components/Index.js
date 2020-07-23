@@ -8,6 +8,7 @@ import {connect} from 'react-redux'
 
 import Search from './Search'
 import GroceryList from './GroceryList'
+import MenuOptions from './MenuOptions'
 import { AntDesign,Feather } from '@expo/vector-icons'
 import {white,cream,black,goodBlue} from '../utils/colors'
 import {handleSetCurrentUserAction} from '../actions/user'
@@ -42,6 +43,7 @@ class Index extends Component{
 		const Tab = createBottomTabNavigator();
 		return(
 			<NavigationContainer > 
+			<MenuOptions/>
 				<Tab.Navigator
 				  tabBarOptions={{
 				  	activeTintColor:'white',
@@ -73,7 +75,6 @@ class Index extends Component{
 		)
 	}
 }
-
 
 
 

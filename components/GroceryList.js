@@ -1,16 +1,11 @@
 import React,{Component, useState} from 'react'
-import {View,Text, FlatList,StyleSheet,TouchableWithoutFeedback} from 'react-native'
+import {View,Text, FlatList,StyleSheet} from 'react-native'
 import GroceryListItem from './GroceryListItem'
 import {connect} from 'react-redux'
 import {white,cream,goodBlue} from '../utils/colors' 
 
 export default function GroceryList(props){
 
-	const [optionsToggled,setOptionsToggled] = useState(false)
-
-	const handleSetOptionsToggled=()=>{
-		setOptionsToggled(true)
-	}
 
 	if (props.dishes.length===0){
 		return(
@@ -22,19 +17,16 @@ export default function GroceryList(props){
 
 	return(
 		<View style={{height:'100%',width:'100%', alignItems:'center'}}>
-			{ optionsToggled &&
-				<OptionsMenu setOptionsToggled={setOptionsToggled}/>
-			}
 			<ViewHeading/>
 
-			<View style={{height:'100%',backgroundColor:cream}}  >
+			<View style={{width:'100%',height:'100%',backgroundColor:cream}}  >
 				<View style={{justifyContent:'center',alignItems:'center'}}>
 					<Text style={{fontSize:28}}>{props.currentList}</Text>
 				</View>
 				<View style={{justifyContent:'center',maxHeight:'100%'}}>
 	      				<FlatList data={props.dishes} 
 	      				contentContainerStyle={{paddingBottom:200}}
-	      				renderItem={({item:dishID})=>{return <GroceryListItem dishID={dishID} setOptionsToggled={handleSetOptionsToggled}/>}}
+	      				renderItem={({item:dishID})=>{return <GroceryListItem dishID={dishID} />}}
 	      				keyExtractor={(item,index)=>index.toString()}
 	      				showsVerticalScrollIndicator={false}/>
 				</View>
@@ -87,15 +79,6 @@ const styles=StyleSheet.create({
 		justifyContent:'center',
 		alignItems:'center',
 		backgroundColor:goodBlue,
-	},
-	optionsMenuContainer:{
-
-		width:'100%',
-		height:'100%',
-		backgroundColor:'black',
-		position:'absolute',
-		zIndex: 1,
-		opacity:.5,
 	}
 })
 
