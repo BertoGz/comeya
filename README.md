@@ -23,7 +23,6 @@ This app demonstrates use my latest skillset with react.
       Uses React hooks, which allowed me to clean up alot of code
       and make programmes less tangeled.
     </li>
-
     <li>
       Demonstrates use of the React Animated Library
     </li>
