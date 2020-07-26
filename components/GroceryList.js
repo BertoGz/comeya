@@ -1,4 +1,4 @@
-import React,{Component, useState} from 'react'
+import React,{Component, useState,useEffect} from 'react'
 import {View,Text, FlatList,StyleSheet} from 'react-native'
 import GroceryListItem from './GroceryListItem'
 import {connect} from 'react-redux'
@@ -6,7 +6,9 @@ import {white,cream,goodBlue} from '../utils/colors'
 
 export default function GroceryList(props){
 
-
+	useEffect(()=>{
+		console.log(props.dishes)
+	})
 	if (props.dishes.length===0){
 		return(
 			<View style={{height:'100%',width:'100%', justifyContent:'center',alignItems:'center'}}>
@@ -26,8 +28,8 @@ export default function GroceryList(props){
 				<View style={{justifyContent:'center',maxHeight:'100%'}}>
 	      				<FlatList data={props.dishes} 
 	      				contentContainerStyle={{paddingBottom:200}}
-	      				renderItem={({item:dishID})=>{return <GroceryListItem dishID={dishID} />}}
-	      				keyExtractor={(item,index)=>index.toString()}
+	      				renderItem={({item:dishID})=> <GroceryListItem dishID={dishID} />}
+	      				keyExtractor={(item) => item}
 	      				showsVerticalScrollIndicator={false}/>
 				</View>
 			</View>

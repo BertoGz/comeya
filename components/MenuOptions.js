@@ -26,6 +26,7 @@ export default function MenuOptions(){
 	useEffect(()=>{ 
 		if (action.title === OPEN_SETTINGS_GROCERY_ITEM ){
 			setOptionsToggled(true)
+
 		}
 		if (action.title === CLOSE_SETTINGS_GROCERY_ITEM){
 			setOptionsToggled(false)
@@ -39,31 +40,40 @@ export default function MenuOptions(){
 		dispatch(handleCloseSettingsGroceryItemAction())
 	}
 
+
 	return(
 		optionsToggled &&
 		<GrocerySettings item={action.item} handleCloseOptionsToggled={handleCloseOptionsToggled}/>
 	)
+
+
 }
 
 
 function GrocerySettings({item,handleCloseOptionsToggled}){
 	const [init,setInit] = useState(true)
 	const [drawerPosition,setDrawerPosition] = useState("bottom")
-	
+	const [terminate,setTerminate] = useState(false)
+
+
+
 	useEffect(()=>{
 		if (init){
-
-			console.log('firstRun')
+			console.log('first render')
+			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 			setInit(false)
-
 		}
 		else{
-			console.log('second run')
+				const timer = setTimeout(() => {
+	  	
+	    	console.log('second render')
+			toggleDrawerAnimation()
+			  	}, 1);
+			  return () => clearTimeout(timer);
 
-			return toggleDrawerAnimation()
+
 		}
 	},[init])
-
 
 	const toggleDrawerAnimation=()=>{
 		console.log('POWER')
@@ -71,20 +81,29 @@ function GrocerySettings({item,handleCloseOptionsToggled}){
     	setDrawerPosition(drawerPosition === "bottom" ? "top" : "bottom")
   	};
 
+
+
   	const animationEnd=()=>{
-  		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  		setDrawerPosition("bottom")
+  		toggleDrawerAnimation()
+  		setTerminate(true)
 	  	const timer = setTimeout(() => {
+	  	
 	    	handleCloseOptionsToggled()
 	    	console.log('ended')
-	  	}, 400);
+	  	}, 200);
 	  return () => clearTimeout(timer);
   	}
 
 	return(
-		<TouchableWithoutFeedback onPress={animationEnd}>
-			<View style={[styles.optionsMenuContainer,drawerPosition === "top"? styles.fading : null]}>
+		<View style={{		width:'100%',
+		height:'100%',	position:'absolute',justifyContent:'center', alignItems:'center',	zIndex: 1}}>
+		{	!terminate &&
+			<TouchableWithoutFeedback onPress={animationEnd}>
+				<View style={[styles.optionsMenuContainer ]}>
 
+				</View>
+			</TouchableWithoutFeedback>
+		}
 					<View style={[styles.optionsMenuContainer2, drawerPosition === "top" ? null : styles.drawerBottom]}>
 					<TouchableWithoutFeedback>
 
@@ -96,7 +115,7 @@ function GrocerySettings({item,handleCloseOptionsToggled}){
 							<View style={{width:'100%'}}>
 								<View style={styles.optionButton}>
 									<TouchableOpacity>
-										<Text style={styles.optionButtonText}>View dish</Text>
+										<Text style={styles.optionButtonText}>View Dish</Text>
 									</TouchableOpacity>
 								</View>
 
@@ -116,8 +135,8 @@ function GrocerySettings({item,handleCloseOptionsToggled}){
 					</TouchableWithoutFeedback>
 					</View>
 
-			</View>
-		</TouchableWithoutFeedback>
+		
+		</View>
 	)
 }
 
@@ -131,10 +150,11 @@ const styles=StyleSheet.create({
 		alignItems:'center',
 		position:'absolute',
 		zIndex: 1,
+		backgroundColor:'rgba(0,0,0,0.5)',
 		
 	},
 	grocerySettings:{
-		width:'70%',
+		width:'100%',
 		height:250,
 		backgroundColor:goodBlue,
 		opacity:1,
@@ -153,13 +173,17 @@ const styles=StyleSheet.create({
 		textAlign:'center'
 	},
 	fading:{
-		backgroundColor:'rgba(0,0,0,0.5)'
+		backgroundColor:'rgba(0,0,0,0.5)',
+		height:'80%'
 	},
 	optionsMenuContainer2:{
-		width:'100%', paddingTop:0,alignItems:'center'
+		width:'80%', paddingTop:0,alignItems:'center',
+		justifyContent:'center',
+		zIndex:1,
+		backgroundColor:'red',
 	},
 	drawerBottom:{
-		paddingTop:'300%'
+		marginTop:'300%'
 	},
 })
 

@@ -7,6 +7,7 @@ import {handleOpenSettingsGroceryItemAction} from '../actions/menuOptions'
 
 
 export default function GroceryListItem(props){
+	var _isMounted = false
 	const [dish,setDish] = useState({title:""})
 	const [opened,setOpened] = useState(false)
 	const dispatch = useDispatch()
@@ -17,14 +18,23 @@ export default function GroceryListItem(props){
 
 
 	useEffect(()=>{
+		//console.log('mounted')
+		_isMounted=true
 		fetchDish()
-	},[dish.title])
+
+				return () => { _isMounted=false
+			console.log('unmount')
+        }
+	},[])
 
 	const fetchDish = async() => {
 
 		const apiCall = await fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/foodData.json')
 		const dishes = await apiCall.json()
-		setDish(dishes[props.dishID] )
+		if(_isMounted){
+			console.log('set Dish', props.dishID)
+			setDish(dishes[props.dishID] )
+		}
 	}
 
 	function handleViewOptionsMenu(){
