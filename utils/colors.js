@@ -11,6 +11,7 @@ export const lightRed= 'rgb(200,20,100)'
 export const black = 'rgb(0,0,0)'
 export const cream = 'rgb(245,238,230)' //offWhite
 export const darkCream ='rgb(225,218,200)' //off white
-export const goodBlue = 'rgb(204, 89, 43)' // orange
+export const goodBlue = 'rgb(254, 149, 53)' // orange
+export const darkBlue = 'rgb(234, 129, 23)' // orange
 
 //export const goodBlue = 'rgb(204, 89, 43)' // orange

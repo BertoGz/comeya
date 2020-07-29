@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import {useDispatch} from 'react-redux'
-import {View,Text,TouchableOpacity,Image,StyleSheet} from 'react-native'
+import {View,Text,TouchableOpacity,Image,LayoutAnimation,StyleSheet} from 'react-native'
 import {white, cream, darkCream,goodBlue,black,gray} from '../utils/colors'
 import {SimpleLineIcons} from '@expo/vector-icons'; 
 import {handleOpenSettingsGroceryItemAction} from '../actions/menuOptions'
@@ -12,13 +12,15 @@ export default function GroceryListItem(props){
 	const [opened,setOpened] = useState(false)
 	const dispatch = useDispatch()
 	const handlePress=()=>{
+		console.log('togggg')
 		setOpened(opened?false : true)
+		LayoutAnimation.configureNext(CustomLayoutAnimation);
 	}
 
 
 
 	useEffect(()=>{
-		//console.log('mounted')
+
 		_isMounted=true
 		fetchDish()
 
@@ -40,8 +42,10 @@ export default function GroceryListItem(props){
 	function handleViewOptionsMenu(){
 		dispatch(handleOpenSettingsGroceryItemAction(dish.title))
 	}
+
+
 	return(
-		<View style={{widht:'100%'}}>
+		<View style={{width:'100%'}}>
 			<View style={opened ? styles.headerOpen : styles.headerClosed }> 
 				<View style={{paddingLeft:10,flexDirection:'row'}}>
 					<CardImage image={dish.url}/>
@@ -57,13 +61,13 @@ export default function GroceryListItem(props){
 				</TouchableOpacity>
 			</View>
 			
-			{ opened && 
+			{ 
 				<View style={styles.ingrediantsContainer}>
 				
-					<View style={{justifyContent:'center', flexWrap:'wrap'}}>
-					{ 
+					<View style={[opened? null : {height:0} , {justifyContent:'center',flexWrap:'wrap'}]}>
+					{  dish.title!=="" && 
 						dish.ingrediants.map(item=>
-									<Text key={item+'2'} style={{fontSize:16,paddingLeft:20}}>{` ${item},`}</Text>
+									<Text key={item+'2'} style={{fontSize:opened?16:0,paddingLeft:20}}>{` ${item},`}</Text>
 						)
 			
 					}
@@ -98,6 +102,29 @@ function CardTitle({title}){
 
 
 
+const CustomLayoutAnimation = {
+	duration:400,
+	create:{
+		duration:200,
+		property: LayoutAnimation.Properties.opacity,
+		type: LayoutAnimation.Types.linear,
+
+
+	},
+	update:{
+		duration:400,
+		property: LayoutAnimation.Properties.opacity,
+		springDamping: 0.6,
+		type: LayoutAnimation.Types.spring
+
+	},
+	delete:{
+		duration:200,
+		property: LayoutAnimation.Properties.opacity,
+		type: LayoutAnimation.Types.linear,
+
+	}
+}
 
 
 

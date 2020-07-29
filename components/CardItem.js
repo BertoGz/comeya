@@ -12,14 +12,19 @@ export default function CardItem(props){
 
 	{/*animation states 1 = added to list animation
 	2 = heart animation*/}
+	const [init,setInit] = useState(true)
 	const currentList = useSelector(state=>state.currentList)
 	const isInList = useSelector(state => state.user).lists[currentList].includes(dish.title)
 	const [triggerAnimation1,setTriggerAnimation1] = useState(isInList)
 
 
 	useEffect(()=>{
-		fetchDish()
+		if(init){
+			fetchDish()
+			setInit(false)
+		}
 		setTriggerAnimation1(isInList)
+
 	},[dish.title,isInList])
 
 	const fetchDish = async() => {
@@ -66,7 +71,7 @@ const CardImage=({image,triggerAnimation1})=>{
             toValue: 1,
             easing: Easing.elastic(.8),
             duration: 880,
-            useNativeDriver: false
+            useNativeDriver: true
         }).start()
 
         Animated.timing(animationIconTransform,{
@@ -87,7 +92,7 @@ const CardImage=({image,triggerAnimation1})=>{
             toValue: 0,
             easing: Easing.linear,
             duration: 0,
-            useNativeDriver: false
+            useNativeDriver: true
         }).start()
 
         Animated.timing(animationIconTransform,{

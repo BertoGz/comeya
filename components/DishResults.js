@@ -9,7 +9,7 @@ export default function DishResults(props){
 		<View style={{width:'100%'}}>
 			<FlatList 
 				data={props.dishes}
-				contentContainerStyle={{paddingBottom:200,width:'100%',alignItems:'center'}}
+				contentContainerStyle={{flexGrow: 1,width:'100%',alignItems:'center'}}
         		renderItem={({item:dishID})=>{return <CardItem dishID={dishID}/>} }
         		keyExtractor={(item,index)=>index.toString()}
         		showsVerticalScrollIndicator={false}

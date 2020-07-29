@@ -1,16 +1,37 @@
 import React,{useState,useEffect} from 'react'
 import {View,Text,Image,StyleSheet,Animated,Easing} from 'react-native'
-import {connect,useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import DishResults from './DishResults'
 import {white,cream,black,goodBlue} from '../utils/colors'
 
 
-export default function Search(props){
+export default function CategoryResultPage(){
+	const [init,setInit] = useState(true)
+	const [dishes,setDishes] = useState([])
+	useEffect(()=>{
+		console.log('used effect')
+
+		if (init){
+			console.log('tried fetching')
+			const getDishes = setInterval(fetchDishes, 10)
+
+			function fetchDishes(){
+			
+				fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/food-id.JSON')
+				.then(response=>response.json()).then(data=>{setDishes(data),clearInterval(getDishes),console.log('success')})
+				.catch((error)=>{console.log('error')})
+			}
+		}
+	},[init])
+
+
+
 
 	return(
+		dishes.length!==0 &&
 		<View style={{width:'100%'}}>
-			<ViewHeading/>
-			<DishResults dishes={props.dishes}/>
+			{/*<ViewHeading/>*/}
+			<DishResults dishes={dishes}/>
 		</View>
 
 	)

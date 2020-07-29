@@ -18,20 +18,18 @@ export default function GroceryList(props){
 	}
 
 	return(
-		<View style={{height:'100%',width:'100%', alignItems:'center'}}>
+		<View style={{width:'100%'}}>
+			
 			<ViewHeading/>
 
-			<View style={{width:'100%',height:'100%',backgroundColor:cream}}  >
-				<View style={{justifyContent:'center',alignItems:'center'}}>
-					<Text style={{fontSize:28}}>{props.currentList}</Text>
-				</View>
-				<View style={{justifyContent:'center',maxHeight:'100%'}}>
-	      				<FlatList data={props.dishes} 
-	      				contentContainerStyle={{paddingBottom:200}}
-	      				renderItem={({item:dishID})=> <GroceryListItem dishID={dishID} />}
-	      				keyExtractor={(item) => item}
-	      				showsVerticalScrollIndicator={false}/>
-				</View>
+			<View style={{width:'100%',backgroundColor:cream}}  >
+				
+				<FlatList data={props.dishes} 
+				contentContainerStyle={{paddingBottom:220,flexGrow:1}}
+				renderItem={({item:dishID})=> <GroceryListItem dishID={dishID} />}
+				keyExtractor={(item) => item}
+				showsVerticalScrollIndicator={false}/>
+				
 			</View>
 
 		</View>

@@ -6,9 +6,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {connect} from 'react-redux'
 
-import Search from './Search'
+import CategoryResultPage from './CategoryResultPage'
 import GroceryList from './GroceryList'
 import MenuOptions from './MenuOptions'
+import TestObj from'./TestObj'
+import BrowseCategoryPage from './BrowseCategoryPage'
 import { AntDesign,Feather } from '@expo/vector-icons'
 import {white,cream,black,goodBlue} from '../utils/colors'
 import {handleSetCurrentUserAction} from '../actions/user'
@@ -42,8 +44,7 @@ class Index extends Component{
 
 		const Tab = createBottomTabNavigator();
 		return(
-			<NavigationContainer > 
-			<MenuOptions/>
+			<NavigationContainer> 
 				<Tab.Navigator
 				  tabBarOptions={{
 				  	activeTintColor:'white',
@@ -58,18 +59,20 @@ class Index extends Component{
 					options={{ title:'Browse',  
             		tabBarIcon: () => ( <AntDesign name="home" color={black} size={22} /> )}} 
 
-					children={()=><Search dishes={this.state.dishesID}/>}
+					//children={()=><CategoryResultPage dishes={this.state.dishesID}/>}
+					children={()=><BrowseCategoryPage/>}
 					/>
 
 					<Tab.Screen name='List'
 					options={{ title:'Grocery List',  
            			tabBarIcon: () => ( <Feather name="list" color={black} size={22} /> )}} 
 					
-					children={()=><GroceryList dishes={this.props.user.lists[this.props.currentList]}/>}
+					children={()=><GroceryList currentList={this.props.currentList}dishes={this.props.user.lists[this.props.currentList]}/>}
 					/>
 					
 
 				</Tab.Navigator>
+				<MenuOptions/>
 			</NavigationContainer> 
 
 		)
