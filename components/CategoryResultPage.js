@@ -1,36 +1,42 @@
 import React,{useState,useEffect} from 'react'
-import {View,Text,Image,StyleSheet,Animated,Easing} from 'react-native'
+import {View,Text,Image,StyleSheet, FlatList,Animated,Easing} from 'react-native'
 import {useSelector} from 'react-redux'
-import DishResults from './DishResults'
+import CardItem from './CardItem'
+
 import {white,cream,black,goodBlue} from '../utils/colors'
 
 
 export default function CategoryResultPage(){
 	const [init,setInit] = useState(true)
 	const [dishes,setDishes] = useState([])
+	var _isMounted = false
 	useEffect(()=>{
+		_isMounted=true
 		console.log('used effect')
 
 		if (init){
 			console.log('tried fetching')
-			const getDishes = setInterval(fetchDishes, 10)
+			const getDishes = setInterval(fetchDishIds, 10)
 
-			function fetchDishes(){
+			function fetchDishIds(){
 			
 				fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/food-id.JSON')
-				.then(response=>response.json()).then(data=>{setDishes(data),clearInterval(getDishes),console.log('success')})
+				.then(response=>response.json())
+				.then(data=>{if(_isMounted){setDishes(data)} clearInterval(getDishes),console.log('success')})
 				.catch((error)=>{console.log('error')})
+			}
+
+			return ()=>{
+				_isMounted=false
+				console.log('unmounted')
 			}
 		}
 	},[init])
 
 
-
-
 	return(
 		dishes.length!==0 &&
 		<View style={{width:'100%'}}>
-			{/*<ViewHeading/>*/}
 			<DishResults dishes={dishes}/>
 		</View>
 
@@ -38,50 +44,24 @@ export default function CategoryResultPage(){
 }
 
 
+function DishResults(props){
 
-
-function ViewHeading(){
-	const amount = useSelector(state => state.user).lists['list1'].length
-	const [animScale, setAnimScale] = useState(new Animated.Value(0))
-	
-	useEffect(()=>{
-		toggleAnimation()
-	},[amount])
-
-	const toggleAnimation = () => {
-		Animated.timing(animScale,{
-        	toValue:2,
-        	easing:Easing.elastic(1),
-        	duration:700,
-        	useNativeDriver: false
-        }).start(() => setAnimScale(new Animated.Value(0)))
-	}
-
-	const iconScale = animScale.interpolate({
-    	inputRange: [0,1,2],
-    	outputRange: [16,12.3,16]
-    })
-
-    const animatedTextScaleStyle={
-    	//transformOrigin: 'center',
-    	 fontSize: iconScale
-    }
-
-
+	///console.log(props.dishes)
 	return(
-		<View style={styles.headingContainer}>
-			<View style={{flexDirection:'row',paddingTop:20,paddingLeft:0}}>
-	        	<Text style={{fontSize:24, paddingTop:5,color:white}}>Recommended</Text>
-
-			</View>
-			<View style={{width:'100%',height:'100%',justifyContent:'flex-end',alignItems:'flex-end',position:'absolute',paddingRight:10,paddingBottom:10}}>
-
-					<Animated.Text style={[styles.listAmount,animatedTextScaleStyle]}>List({amount})</Animated.Text>
-
-			</View>
-        </View>
+		<View style={{width:'100%'}}>
+			<FlatList 
+				data={props.dishes}
+				contentContainerStyle={{flexGrow: 1,width:'100%',alignItems:'center'}}
+        		renderItem={({item:dishID})=>{return <CardItem dishID={dishID}/>} }
+        		keyExtractor={(item,index)=>index.toString()}
+        		showsVerticalScrollIndicator={false}
+        	/>
+		</View>
 	)
+
 }
+
+
 
 const styles=StyleSheet.create({
 	container:{

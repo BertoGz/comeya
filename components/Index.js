@@ -7,7 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {connect} from 'react-redux'
 
 import CategoryResultPage from './CategoryResultPage'
-import GroceryList from './GroceryList'
+import GroceryListPage from './GroceryListPage'
 import MenuOptions from './MenuOptions'
 import TestObj from'./TestObj'
 import BrowseCategoryPage from './BrowseCategoryPage'
@@ -48,11 +48,9 @@ class Index extends Component{
 				<Tab.Navigator
 				  tabBarOptions={{
 				  	activeTintColor:'white',
-          inactiveBackgroundColor: 'white',
-          activeBackgroundColor:goodBlue,
-
-        }}
-
+          			inactiveBackgroundColor: 'white',
+         			 activeBackgroundColor:goodBlue
+        			}}
 				>
 
 					<Tab.Screen name='home'
@@ -67,7 +65,7 @@ class Index extends Component{
 					options={{ title:'Grocery List',  
            			tabBarIcon: () => ( <Feather name="list" color={black} size={22} /> )}} 
 					
-					children={()=><GroceryList currentList={this.props.currentList}dishes={this.props.user.lists[this.props.currentList]}/>}
+					children={()=><GroceryListPage currentList={this.props.currentList}dishes={this.props.user.lists[this.props.currentList]}/>}
 					/>
 					
 

@@ -43,37 +43,41 @@ export default function GroceryListItem(props){
 		dispatch(handleOpenSettingsGroceryItemAction(dish.title))
 	}
 
+	if (dish.title===""){
+		return(
+			<View style={{justifyContent:'center',alignItems:'center'}}><Text>Fetching Data...</Text></View>
+		)
+	}
 
 	return(
 		<View style={{width:'100%'}}>
-			<View style={opened ? styles.headerOpen : styles.headerClosed }> 
-				<View style={{paddingLeft:10,flexDirection:'row'}}>
-					<CardImage image={dish.url}/>
-					<TouchableOpacity onPress={handlePress} style={{width:'68%',paddingRight:20}}>
-						<View>
-							<CardTitle title={dish.title}/>
-						</View>
-					</TouchableOpacity>
-				</View>
 
-				<TouchableOpacity style={{justifyContent:'center',padding:20}} onPress={handleViewOptionsMenu}>
-					<SimpleLineIcons name="options-vertical" size={24} color="black" />
+			<View style={styles.itemUpper }> 
+
+					<CardImage image={dish.url}/>
+					<TouchableOpacity onPress={handlePress} style={{width:'68%',paddingRight:0}}>
+							<CardTitle title={dish.title}/>
+					</TouchableOpacity>
+		
+
+				<TouchableOpacity style={{justifyContent:'center'}} onPress={handleViewOptionsMenu}>
+					<SimpleLineIcons name="options-vertical" size={24}color="black" />
 				</TouchableOpacity>
 			</View>
 			
-			{ 
-				<View style={styles.ingrediantsContainer}>
-				
-					<View style={[opened? null : {height:0} , {justifyContent:'center',flexWrap:'wrap'}]}>
-					{  dish.title!=="" && 
-						dish.ingrediants.map(item=>
-									<Text key={item+'2'} style={{fontSize:opened?16:0,paddingLeft:20}}>{` ${item},`}</Text>
-						)
 			
-					}
-					</View>
+			<View style={styles.ingrediantsContainer}>
+			
+				<View style={[opened? null : {height:0} , {justifyContent:'center',flexWrap:'wrap'}]}>
+				{  dish.title!=="" && 
+					dish.ingrediants.map(item=>
+								<Text key={item+'2'} style={{fontSize:opened?18:0,paddingTop:0,paddingLeft:30}}>{`\u2022`}{` ${item}` }</Text>
+					)
+		
+				}
 				</View>
-			}
+			</View>
+			
 
 		</View>
 	)
@@ -84,7 +88,7 @@ export default function GroceryListItem(props){
 function CardImage({image}){
 
 	return(
-		<View style={{alignItems:'center'}}>
+		<View style={{alignItems:'center',paddingLeft:10}}>
 			<Image
 		        style={styles.cardImg}
 		        source={{uri:image}}
@@ -94,7 +98,7 @@ function CardImage({image}){
 }
 function CardTitle({title}){
 	return(
-		<View style={{ flexShrink:1 }}>
+		<View style={{height:'80%',alignItems:'center',flexShrink:1,justifyContent:'center'}}>
 			<Text style={{fontSize:20,color:gray,paddingLeft:20,}}>{title}</Text>
 		</View>
 	)
@@ -129,25 +133,19 @@ const CustomLayoutAnimation = {
 
 
 const styles=StyleSheet.create({
-	headerClosed:{
-		width:'100%',
+	itemUpper:{
 		padding:10,
 		flexDirection:'row',
 		alignItems:'center',
 		borderBottomWidth:2,
 		borderColor:gray,
-	},
-	headerOpen:{
-
-		padding:10,
-		flexDirection:'row',
-		alignItems:'center',
-		borderBottomWidth:2,
-		borderColor:gray,
+		height:100
 	},
 	ingrediantsContainer:{
 		borderColor:gray,
-		backgroundColor:darkCream
+		backgroundColor:darkCream,
+		paddingTop:10,
+		paddingBottom:10
 	},
 	cardImg:{
 		width:65,

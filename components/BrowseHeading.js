@@ -10,6 +10,7 @@ export default function BrowseHeading(props){
 	
 	useEffect(()=>{
 		toggleAnimation()
+
 	},[amount])
 
 	const toggleAnimation = () => {

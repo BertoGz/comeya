@@ -1,15 +1,15 @@
-import React,{useState} from 'react'
+import React,{useState,useMemo,useEffect} from 'react'
 import {View,Text,StyleSheet,ScrollView,FlatList,TouchableOpacity} from 'react-native'
 
 import { createStackNavigator } from '@react-navigation/stack';
 import BrowseHeading from './BrowseHeading'
 import CategoryResultPage from './CategoryResultPage'
 import {white,cream,black,goodBlue,darkCream} from '../utils/colors'
-
+import {getCategoriesFromServer} from '../utils/api'
 
 const Stack = createStackNavigator();
-
 export default function BrowseCategoryPage(){
+
 
 	return(
 		<View style={{width:'100%',height:'100%'}}>
@@ -22,25 +22,34 @@ export default function BrowseCategoryPage(){
 					<Stack.Screen name="Main" component={Main} options={{ headerTitle: 'Browse',headerTitleStyle: {fontSize:24,fontWeight:'normal'},headerTintColor:'black' }}/>
 					<Stack.Screen name="ResultCategory" 
 					options={{ headerTitle: 'Browse',headerTitleStyle: {fontSize:24,fontWeight:'normal'},headerBackTitle:'Back', headerTintColor:'black' }} 
-					children={()=><CategoryResultPage/>} />
+					children={()=><CategoryResultPage/>} 
+					/>
 				</Stack.Navigator>
 		
 		</View>
 	)
 }
 
-
+//shows a page of different categories
 function Main({navigation}){
-		const [categories,setCategories] = useState([
-		'Healthy', 'Trending','Asian','Vegan',
-		'Mexican','Classic',
-	])
+		const [categories,setCategories] = useState([])
 
+	useEffect(()=>{
+		getCategoriesFromServer().then(({categories})=>
+			setCategories(categories)
+		)			
+	},[categories.length])
+
+	if (categories.length===0){
+		return (
+			<View></View>
+		)
+	}
 	return(
 			<View style={{backgroundColor:cream}}>
 				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:20,flexGrow: 1,flexWrap:'wrap',flexDirection:'row'}}>
 				{
-					categories.map((item,index)=>{return<CategoryIcon key={index} text={item} navigation={navigation}/>})
+					Object.values(categories).map((item,index)=>{return<CategoryIcon key={index} text={item.title} navigation={navigation}/>})
 				}
 				</ScrollView>
 			</View>
