@@ -4,7 +4,11 @@ import GroceryListItem from './GroceryListItem'
 import {connect} from 'react-redux'
 import {white,cream,goodBlue} from '../utils/colors' 
 
-export default function GroceryList(props){
+import { createStackNavigator } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+
+const Stack = createStackNavigator();
+export default function ListTabView(props){
 
 	useEffect(()=>{
 		console.log(props.dishes)
@@ -18,36 +22,34 @@ export default function GroceryList(props){
 	}
 
 	return(
-		<View style={{width:'100%'}}>
-			
-			<ViewHeading/>
+		<View style={{height:'100%', width:'100%'}}>
+			<Stack.Navigator
+				screenOptions={{
+			    headerStyle:{backgroundColor:goodBlue,height:100,borderBottomColor: 'rgba(0,0,0,.25)',
+				borderBottomWidth: 2}
+	  		}}>
 
-			<View style={{width:'100%',backgroundColor:cream}}  >
-				
-				<FlatList data={props.dishes} 
-				contentContainerStyle={{paddingBottom:220,flexGrow:1}}
-				renderItem={({item:dishID})=> <GroceryListItem dishID={dishID} />}
-				keyExtractor={(item) => item}
-				showsVerticalScrollIndicator={false}/>
-				
-			</View>
+	  		<Stack.Screen name="Main" children={()=><Home dishes={props.dishes}/>} 
+			options={{  headerTitle: 'List',headerTitleStyle: {fontSize:24,fontWeight:'normal'},headerTintColor:'black' }}/>
+
+			</Stack.Navigator>
 
 		</View>
 	)
 	
 }
 
-
-
-function ViewHeading(){
-
-
+function Home({dishes}){
 	return(
-		<View style={styles.headingContainer}>
-			<View style={{flexDirection:'row',paddingTop:20,paddingLeft:0}}>
-	        	<Text style={{fontSize:24, paddingTop:5,color:white}}>list</Text>
-			</View>
-        </View>
+		<View style={{width:'100%',backgroundColor:cream}}  >
+						
+			<FlatList data={dishes} 
+			contentContainerStyle={{paddingBottom:220,flexGrow:1}}
+			renderItem={({item:dishID})=> <GroceryListItem dishID={dishID} />}
+			keyExtractor={(item) => item}
+			showsVerticalScrollIndicator={false}/>
+						
+		</View>
 	)
 }
 

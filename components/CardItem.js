@@ -16,22 +16,30 @@ export default function CardItem(props){
 	const currentList = useSelector(state=>state.currentList)
 	const isInList = useSelector(state => state.user).lists[currentList].includes(dish.title)
 	const [triggerAnimation1,setTriggerAnimation1] = useState(isInList)
-
+	var _isMounted = false
 
 	useEffect(()=>{
+		console.log('dishItem mounted')
+		_isMounted=true
 		if(init){
 			fetchDish()
-			setInit(false)
 		}
-		setTriggerAnimation1(isInList)
 
-	},[dish.title,isInList])
+			return ()=>{
+				_isMounted=false
+				console.log('dishItem unmounted')
+			}
+
+	},[])
 
 	const fetchDish = async() => {
-
+		console.log('caca fetching')
 		const apiCall = await fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/foodData.json')
 		const dishes = await apiCall.json()
-		setDish(dishes[props.dishID] )
+		if (_isMounted){
+			setDish(dishes[props.dishID] )
+			setInit(false)
+		}
 	}
 
 
@@ -45,7 +53,7 @@ export default function CardItem(props){
 					</View>
 
 					<Break/> 
-					<CardImage image={dish.url} triggerAnimation1={triggerAnimation1} />
+					<CardImage image={dish.url} isInList={isInList} triggerAnimation1={triggerAnimation1} />
 					<CardButtons inList={isInList} dishTitle={dish.title} setTriggerAnimation1={setTriggerAnimation1}/>
 					<Description/>
 				</View>
@@ -59,13 +67,31 @@ export default function CardItem(props){
 }
 
 
-const CardImage=({image,triggerAnimation1})=>{
-
+const CardImage=({image,isInList,triggerAnimation1})=>{
 
 	const [animationPos,setAnimationPos] = useState(new Animated.Value(triggerAnimation1? 1 : 0))
 	const [animationIconTransform, setAnimationIconTransform] = useState(new Animated.Value(triggerAnimation1 ? 2: 0))
 
-    if (triggerAnimation1===true){
+	useEffect(()=>{
+		if(isInList){
+			Animated.timing(animationPos, {
+            toValue: 1,
+            easing: Easing.elastic(.8),
+            duration: 1,
+            useNativeDriver: true
+        }).start()
+
+        Animated.timing(animationIconTransform,{
+        	toValue:2,
+        	easing:Easing.elastic(1),
+        	duration:1,
+        	useNativeDriver: false
+        }).start()
+			
+		}
+	},[])
+
+    if (triggerAnimation1===true || isInList){
   
         Animated.timing(animationPos, {
             toValue: 1,
@@ -82,11 +108,9 @@ const CardImage=({image,triggerAnimation1})=>{
         }).start()
 
 
-
-
     }
 
-    if (triggerAnimation1===false){
+    if (triggerAnimation1===false && !isInList ){
 
         Animated.timing(animationPos, {
             toValue: 0,
@@ -173,28 +197,12 @@ const CardButtons=({dishTitle,inList,setTriggerAnimation1})=>{
 		const hasFavorited = false
 		const dispatch=useDispatch()
 		function toggleItem(){
-				dispatch(handleToggleListItemAction('bertogz',dishTitle,'list1'))
+				return dispatch(handleToggleListItemAction('bertogz',dishTitle,'list1'))
 		}
 		const handleAddToList =()=>{
-			
-
-			if (inList)
-			{
-				//setInList(false)
-				setTriggerAnimation1(false)
-				toggleItem()
-				//toggleListItemFromServer('bertogz',dishTitle,'list1')
-				//.catch(e=>{setInList(true), console.log('rejected')})
-			}
-			else{
-				//setInList(true)
-				setTriggerAnimation1(true)
-				toggleItem()
-				//toggleListItemFromServer('bertogz',dishTitle,'list1')
-				//.catch( e=>{setInList(false), console.log('rejected')})
-				}
-			}
-		
+			setTriggerAnimation1(inList ? false : true)
+			toggleItem().catch((error)=>{setTriggerAnimation1(inList ? false : true)})
+		}
 
 	return(
 		<View style={{flexDirection:'row',alignItems:'flex-end',padding:0,marginLeft:10,marginRight:10,borderRadius:10, backgroundColor:darkCream}}>			

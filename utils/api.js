@@ -16,7 +16,7 @@ let users = {
 let categories = {
 	"healthy":{
 		"title":"Healthy",
-		"tags":["salad","low-carb","low-fat"],
+		"tags":["salad","low-carb","low-fat","healthy"],
 		"coverUrl":""
 
 	},
@@ -30,41 +30,46 @@ let categories = {
 		"tags":["asian"],
 		"coverUrl":""
 	},
-	"vegan":{
-		"title":"Vegan",
-		"tags":["vegan"],
-		"coverUrl":""
-	},
 	"mexican":{
 		"title":"Mexican",
 		"tags":["tortilla","mexican","salsa"],
 		"coverUrl":""
 
 	},
-	"Sunday bbq":{
+	"sunday bbq":{
 		"title":"Sunday BBQ",
-		"tags":["summer","outdoors",],
+		"tags":["summer","outdoors"],
+		"coverUrl":""
+	},
+	"pasta":{
+		"title":"Pasta",
+		"tags":["italian","pasta"],
 		"coverUrl":""
 	},
 	"classic":{
 		"title":"Classic",
-		"tags":["classic","american",],
+		"tags":["classic","american"],
 		"coverUrl":""
-	}
+	},
+	"vegan":{
+		"title":"Vegan",
+		"tags":["vegan"],
+		"coverUrl":""
+	},
 }
 
 
 
 export function getUserFromServer(userID){
 	  return new Promise((res, rej) => {
-    setTimeout(() => res({...users[userID]}), 1000)
+    setTimeout(() => res({...users[userID]}), 500)
   }).then(user=>({user}))
 }
 
 
 export function getCategoriesFromServer(){
 	return new Promise((res,rej)=>{
-		setTimeout(()=>res({...categories}),1000)
+		setTimeout(()=>res({...categories}),500)
 	}).then(categories=>({categories}))
 }
 
@@ -132,5 +137,7 @@ export function toggleListItemFromServer(authedUser,dishTitle,list){
 			res()
 			//
 		},500)
+	//rej()
+		
 	})
 }

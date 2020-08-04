@@ -1,71 +1,66 @@
 import React,{Component,useEffect,useState} from 'react'
 import {View,Text,Image,StyleSheet} from 'react-native'
+import {connect,useSelector,useDispatch} from 'react-redux'
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {connect} from 'react-redux'
 
 import CategoryResultPage from './CategoryResultPage'
-import GroceryListPage from './GroceryListPage'
+import ListTabView from './ListTabView'
 import MenuOptions from './MenuOptions'
 import TestObj from'./TestObj'
-import BrowseCategoryPage from './BrowseCategoryPage'
+import BrowseTabView from './BrowseTabView'
 import { AntDesign,Feather } from '@expo/vector-icons'
 import {white,cream,black,goodBlue} from '../utils/colors'
 import {handleSetCurrentUserAction} from '../actions/user'
 import {handleSetCurrentListAction} from '../actions/currentList'
 
-class Index extends Component{
-	state={
-		dishesID: [],
-	}
 
-	componentDidMount(){
+const Tab = createBottomTabNavigator();
+export default function Index(){
 
-		this.props.dispatch(handleSetCurrentUserAction(this.props.authedUser))
-		this.props.dispatch(handleSetCurrentListAction('list1'))
+	const [dishesID,setDishesID] = useState([])
+	const currentList = useSelector(state => state.currentList)
+	const user = useSelector(state => state.user)
 
-		return new Promise((resolve,reject)=>{
-			fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/food-id.JSON')
-			.then((response) => resolve(response.json()))
-		}).then((data)=>this.setState({dishesID:data}))
+	const authedUser = 'bertogz'
+
+	const dispatch = useDispatch();
+
+	useEffect(()=>{
+		dispatch(handleSetCurrentUserAction(authedUser))
+		dispatch(handleSetCurrentListAction('list1'))
+
+		fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/food-id.JSON')
+		.then((response) => response.json()).then((data)=>setDishesID({dishesID:data}))
+
+	},[])
 
 		
-	}
-
-
-
-	render(){
-		
-		if(this.props.loading){
+		if(dishesID.length===0 || !user.id ){
+			console.log('empty')
 			return null
 		}
 
-		const Tab = createBottomTabNavigator();
 		return(
 			<NavigationContainer> 
 				<Tab.Navigator
-				  tabBarOptions={{
-				  	activeTintColor:'white',
-          			inactiveBackgroundColor: 'white',
-         			 activeBackgroundColor:goodBlue
-        			}}
-				>
+				  tabBarOptions={{activeTintColor:'white',inactiveBackgroundColor: 'white',
+         			 activeBackgroundColor:goodBlue}}>
 
 					<Tab.Screen name='home'
 					options={{ title:'Browse',  
             		tabBarIcon: () => ( <AntDesign name="home" color={black} size={22} /> )}} 
 
-					//children={()=><CategoryResultPage dishes={this.state.dishesID}/>}
-					children={()=><BrowseCategoryPage/>}
+					children={()=><BrowseTabView/>}
 					/>
 
 					<Tab.Screen name='List'
-					options={{ title:'Grocery List',  
+					options={{ title:'List',  
            			tabBarIcon: () => ( <Feather name="list" color={black} size={22} /> )}} 
 					
-					children={()=><GroceryListPage currentList={this.props.currentList}dishes={this.props.user.lists[this.props.currentList]}/>}
+					children={()=><ListTabView currentList={currentList} dishes={user.lists[currentList]}/>}
 					/>
 					
 
@@ -74,22 +69,8 @@ class Index extends Component{
 			</NavigationContainer> 
 
 		)
-	}
 }
 
 
 
 
-
-function mapStateToProps({user,currentList}){
-
-	return{
-		user,
-		currentList,
-		loading: Object.values(user).length===0 || !user.lists[currentList],
-		authedUser: 'bertogz'
-	}
-}
-
-
-export default connect(mapStateToProps)(Index)

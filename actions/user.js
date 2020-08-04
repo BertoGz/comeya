@@ -31,11 +31,12 @@ export function toggleListItemAction(listItem){
 
 export function handleToggleListItemAction(authedUser,dishTitle,list){
 	return(dispatch)=>{
-		dispatch(toggleListItemAction({authedUser,dishTitle,list}))
+		dispatch(toggleListItemAction({authedUser,dishTitle,list})) //redux store
 
-		return toggleListItemFromServer(authedUser,dishTitle,list).catch(()=>{
+		return toggleListItemFromServer(authedUser,dishTitle,list).catch(()=>{  //server side
 			dispatch(toggleListItemAction({authedUser,dishTitle,list}))
 			console.log('error in toggling listItem')
+		
 		})
 
 	

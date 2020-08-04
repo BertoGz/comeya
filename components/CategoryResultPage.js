@@ -6,33 +6,34 @@ import CardItem from './CardItem'
 import {white,cream,black,goodBlue} from '../utils/colors'
 
 
-export default function CategoryResultPage(){
+export default function CategoryResultPage(props){
+	var _isMounted = false
 	const [init,setInit] = useState(true)
 	const [dishes,setDishes] = useState([])
-	var _isMounted = false
+
 	useEffect(()=>{
+		
 		_isMounted=true
-		console.log('used effect')
 
-		if (init){
-			console.log('tried fetching')
-			const getDishes = setInterval(fetchDishIds, 10)
-
-			function fetchDishIds(){
-			
-				fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/food-id.JSON')
-				.then(response=>response.json())
-				.then(data=>{if(_isMounted){setDishes(data)} clearInterval(getDishes),console.log('success')})
-				.catch((error)=>{console.log('error')})
-			}
-
+		if (init){		
+			getDishesId()
+		}
 			return ()=>{
 				_isMounted=false
-				console.log('unmounted')
 			}
-		}
 	},[init])
 
+	function getDishesId(){
+					fetch('https://raw.githubusercontent.com/BertoGz/food-data/master/food-id.JSON')
+					.then(response=>response.json())
+					.then(data=>{
+						if(_isMounted){					
+							setDishes(data)
+							
+						}})
+					.catch((error)=>{console.log('error')})
+		
+	}
 
 	return(
 		dishes.length!==0 &&
@@ -43,19 +44,19 @@ export default function CategoryResultPage(){
 	)
 }
 
-
+//renders dish items from id's
 function DishResults(props){
 
 	///console.log(props.dishes)
 	return(
 		<View style={{width:'100%'}}>
-			<FlatList 
+			{<FlatList 
 				data={props.dishes}
 				contentContainerStyle={{flexGrow: 1,width:'100%',alignItems:'center'}}
         		renderItem={({item:dishID})=>{return <CardItem dishID={dishID}/>} }
         		keyExtractor={(item,index)=>index.toString()}
         		showsVerticalScrollIndicator={false}
-        	/>
+        	/>}
 		</View>
 	)
 
